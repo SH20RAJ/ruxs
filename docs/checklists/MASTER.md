@@ -50,7 +50,7 @@ This master checklist represents the complete execution roadmap for RUXS. Checkb
 - [ ] [28-performance](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/28-performance.md) — Edge latency optimization, bundle audits & database query indexing
 
 ## Dashboards & Portals
-- [ ] [22-vendor-dashboard](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/22-vendor-dashboard.md) — Live kitchen prep counter, customer management & collection views
+- [x] [22-vendor-dashboard](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/22-vendor-dashboard.md) — Live kitchen prep counter, customer management & collection views
 - [ ] [23-customer-dashboard](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/23-customer-dashboard.md) — 1-Tap daily actions, Khata inspection & invoice payments
 - [ ] [24-admin](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/24-admin.md) — Platform admin console, vendor approvals & global oversight
 - [ ] [25-analytics](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/25-analytics.md) — Operational KPIs, food waste metrics & financial reports

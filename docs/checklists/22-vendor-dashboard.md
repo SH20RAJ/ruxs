@@ -4,31 +4,31 @@
 Build the real-time operational command center for kitchen owners and depot managers.
 
 ## Requirements
-- [ ] Live kitchen production counter (Total meals, variants, add-ons)
-- [ ] Cutoff countdown timer with visual lock state
-- [ ] Customer roster with quick search and subscription statuses
-- [ ] One-click monthly invoice dispatch trigger
+- [x] Live kitchen production counter (Total meals, variants, add-ons)
+- [x] Cutoff countdown timer with visual lock state
+- [x] Customer roster with quick search and subscription statuses
+- [x] One-click monthly invoice dispatch trigger
 
 ## Implementation
-- [ ] Database/model
-- [ ] Server-side logic
-- [ ] UI
-- [ ] Validation
-- [ ] Error handling
-- [ ] Tests
-- [ ] Documentation
+- [x] Database/model
+- [x] Server-side logic
+- [x] UI
+- [x] Validation
+- [x] Error handling
+- [x] Tests
+- [x] Documentation
 
 ## Acceptance Criteria
-- [ ] Dashboard loads and updates in real time
-- [ ] One-thumb operation with high contrast touch targets
+- [x] Dashboard loads and updates in real time
+- [x] One-thumb operation with high contrast touch targets
 
 ## Verification
-- [ ] Local test passed
-- [ ] Build passed
-- [ ] Relevant tests passed
-- [ ] Manual verification passed
+- [x] Local test passed
+- [x] Build passed
+- [x] Relevant tests passed
+- [x] Manual verification passed
 
 ## Git
-- Commit:
-- Push:
-- Branch:
+- Commit: feat: implement vendor operations dashboard with live kitchen prep counter and subscriber run sheet
+- Push: SUCCESS
+- Branch: main
