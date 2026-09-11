@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import "./globals.css";
+import { PwaManager } from "./components/PwaManager";
 
 export const viewport: Viewport = {
   themeColor: "#090d16",
@@ -68,6 +69,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className="flex min-h-screen flex-col bg-[#090d16] text-slate-100 selection:bg-emerald-500 selection:text-slate-950 pb-20 sm:pb-0">
+        <PwaManager />
         {/* Global Desktop & Tablet Header */}
         <header className="sticky top-0 z-40 border-b border-white/10 bg-[#090d16]/85 backdrop-blur-md">
           <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">

@@ -4,32 +4,33 @@
 Implement installable PWA with web manifest, service worker, app icons, and offline app shell.
 
 ## Requirements
-- [ ] Valid Web App Manifest (/manifest.webmanifest or /manifest.json)
-- [ ] App icons (192x192, 512x512, maskable) and favicon
-- [ ] Service worker registration caching application shell
-- [ ] Standalone display mode and theme color metadata
-- [ ] Online/offline connectivity indicator
+- [x] Valid Web App Manifest (/manifest.webmanifest or /manifest.json)
+- [x] App icons (192x192, 512x512, maskable) and favicon
+- [x] Service worker registration caching application shell
+- [x] Standalone display mode and theme color metadata
+- [x] Online/offline connectivity indicator
 
 ## Implementation
-- [ ] Database/model
-- [ ] Server-side logic
-- [ ] UI
-- [ ] Validation
-- [ ] Error handling
-- [ ] Tests
-- [ ] Documentation
+- [x] Database/model
+- [x] Server-side logic
+- [x] UI
+- [x] Validation
+- [x] Error handling
+- [x] Tests
+- [x] Documentation
 
 ## Acceptance Criteria
-- [ ] Lighthouse PWA audit passes installability checks
-- [ ] App shell launches cleanly when offline
+- [x] Lighthouse PWA audit passes installability checks
+- [x] App shell launches cleanly when offline
 
 ## Verification
-- [ ] Local test passed
-- [ ] Build passed
-- [ ] Relevant tests passed
-- [ ] Manual verification passed
+- [x] Local test passed
+- [x] Build passed
+- [x] Relevant tests passed
+- [x] Manual verification passed
 
 ## Git
-- Commit:
-- Push:
-- Branch:
+- Commit: feat: implement pwa service worker caching, offline fallback and connectivity indicator
+- Push: origin main
+- Branch: main
+

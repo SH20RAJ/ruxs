@@ -27,10 +27,12 @@ This master checklist represents the complete execution roadmap for RUXS. Checkb
 - [x] [11-billing](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/11-billing.md) — Monthly statement derivation, itemization & automated invoice generation
 - [x] [12-payments](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/12-payments.md) — UPI-first payment provider abstraction & idempotent webhook reconciliation
 
+## PWA & Device Integration
+- [x] [15-pwa](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/15-pwa.md) — Installable PWA manifest, service worker, icons & offline shell
+
 ## Communication & Interface
 - [ ] [13-whatsapp](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/13-whatsapp.md) — Meta Cloud API interactive buttons, webhooks & session management
 - [ ] [14-notifications](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/14-notifications.md) — Multi-channel event-driven notifications (In-app, Push, SMS fallback)
-- [ ] [15-pwa](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/15-pwa.md) — Installable PWA manifest, service worker, icons & offline shell
 
 ## Logistics & Physical Assets
 - [ ] [16-assets](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/16-assets.md) — Returnable physical container accounting (20L jars, tiffins, deposits)
