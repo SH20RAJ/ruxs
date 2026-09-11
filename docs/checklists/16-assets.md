@@ -4,31 +4,32 @@
 Track circulating physical containers, empty exchanges, customer holding balances, and deposits.
 
 ## Requirements
-- [ ] AssetType entity (20L Water Can, Stainless Steel Tiffin)
-- [ ] CustomerAssetBalance holding tracker
-- [ ] Doorstep asset exchange recording (Delivered vs Collected)
-- [ ] Security deposit debit/refund integration with Khata
+- [x] AssetType entity (20L Water Can, Stainless Steel Tiffin)
+- [x] CustomerAssetBalance holding tracker
+- [x] Doorstep asset exchange recording (Delivered vs Collected)
+- [x] Security deposit debit/refund integration with Khata
 
 ## Implementation
-- [ ] Database/model
-- [ ] Server-side logic
-- [ ] UI
-- [ ] Validation
-- [ ] Error handling
-- [ ] Tests
-- [ ] Documentation
+- [x] Database/model
+- [x] Server-side logic
+- [x] UI
+- [x] Validation
+- [x] Error handling
+- [x] Tests
+- [x] Documentation
 
 ## Acceptance Criteria
-- [ ] Delivery recording updates holding balance: new = old + (del - col)
-- [ ] Asset exit reconciliation verifies 0 unreturned containers before deposit refund
+- [x] Delivery recording updates holding balance: new = old + (del - col)
+- [x] Asset exit reconciliation verifies 0 unreturned containers before deposit refund
 
 ## Verification
-- [ ] Local test passed
-- [ ] Build passed
-- [ ] Relevant tests passed
-- [ ] Manual verification passed
+- [x] Local test passed
+- [x] Build passed
+- [x] Relevant tests passed
+- [x] Manual verification passed
 
 ## Git
-- Commit:
-- Push:
-- Branch:
+- Commit: feat: implement physical asset ledger for circulating containers and deposit reconciliation
+- Push: origin main
+- Branch: main
+

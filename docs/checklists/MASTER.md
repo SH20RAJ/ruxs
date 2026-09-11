@@ -35,7 +35,7 @@ This master checklist represents the complete execution roadmap for RUXS. Checkb
 - [x] [14-notifications](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/14-notifications.md) — Multi-channel event-driven notifications (In-app, Push, SMS fallback)
 
 ## Logistics & Physical Assets
-- [ ] [16-assets](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/16-assets.md) — Returnable physical container accounting (20L jars, tiffins, deposits)
+- [x] [16-assets](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/16-assets.md) — Returnable physical container accounting (20L jars, tiffins, deposits)
 - [ ] [17-delivery](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/17-delivery.md) — Driver run sheets, society/tower sequencing & delivery verification
 - [ ] [18-vacation-mode](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/18-vacation-mode.md) — Multi-service bulk pause windows & automated billing freeze
 
