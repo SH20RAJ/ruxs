@@ -4,31 +4,31 @@
 Enable multiple roommates or family members to share domestic services under a unified household.
 
 ## Requirements
-- [ ] Household and HouseholdMember entities with role permissions
-- [ ] Member invite flow via phone number link
-- [ ] Household subscription visibility dashboard
-- [ ] Delegated daily skip permissions for members
+- [x] Household and HouseholdMember entities with role permissions
+- [x] Member invite flow via phone number link
+- [x] Household subscription visibility dashboard
+- [x] Delegated daily skip permissions for members
 
 ## Implementation
-- [ ] Database/model
-- [ ] Server-side logic
-- [ ] UI
-- [ ] Validation
-- [ ] Error handling
-- [ ] Tests
-- [ ] Documentation
+- [x] Database/model
+- [x] Server-side logic
+- [x] UI
+- [x] Validation
+- [x] Error handling
+- [x] Tests
+- [x] Documentation
 
 ## Acceptance Criteria
-- [ ] Flatmates can view live fulfillment status for shared water and milk
-- [ ] Primary account owner retains billing liability
+- [x] Flatmates can view live fulfillment status for shared water and milk
+- [x] Primary account owner retains billing liability
 
 ## Verification
-- [ ] Local test passed
-- [ ] Build passed
-- [ ] Relevant tests passed
-- [ ] Manual verification passed
+- [x] Local test passed
+- [x] Build passed
+- [x] Relevant tests passed
+- [x] Manual verification passed
 
 ## Git
-- Commit:
-- Push:
-- Branch:
+- Commit: feat: implement household accounts with roommate invites and delegated skip permissions
+- Push: SUCCESS
+- Branch: main

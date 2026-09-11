@@ -40,7 +40,7 @@ This master checklist represents the complete execution roadmap for RUXS. Checkb
 - [x] [18-vacation-mode](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/18-vacation-mode.md) — Multi-service bulk pause windows & automated billing freeze
 
 ## Household & Social
-- [ ] [19-households](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/19-households.md) — Shared household accounts, roommate permissions & service visibility
+- [x] [19-households](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/19-households.md) — Shared household accounts, roommate permissions & service visibility
 - [ ] [20-expense-splitting](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/20-expense-splitting.md) — Splitwise-style roommate billing & P2P UPI settlements
 
 ## Reliability & Governance
