@@ -31,7 +31,7 @@ This master checklist represents the complete execution roadmap for RUXS. Checkb
 - [x] [15-pwa](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/15-pwa.md) — Installable PWA manifest, service worker, icons & offline shell
 
 ## Communication & Interface
-- [ ] [13-whatsapp](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/13-whatsapp.md) — Meta Cloud API interactive buttons, webhooks & session management
+- [x] [13-whatsapp](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/13-whatsapp.md) — Meta Cloud API interactive buttons, webhooks & session management
 - [x] [14-notifications](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/14-notifications.md) — Multi-channel event-driven notifications (In-app, Push, SMS fallback)
 
 ## Logistics & Physical Assets
