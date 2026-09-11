@@ -4,6 +4,15 @@ import {
   TransitionAction,
 } from "./fulfillment-schema";
 import { Paise, calculatePercentage } from "../../shared/types/money";
+import { db, isTestEnv } from "../../shared/db";
+import {
+  dailyFulfillments,
+  subscriptions,
+  products,
+  users,
+  households,
+} from "../../shared/db/schema";
+import { eq, and } from "drizzle-orm";
 
 const fulfillmentStore = new Map<string, DailyFulfillment>();
 
@@ -113,11 +122,92 @@ export class FulfillmentStateMachine {
 
     fulfillment.updatedAt = now.toISOString();
     fulfillmentStore.set(fulfillment.id, fulfillment);
+
+    if (!isTestEnv) {
+      db.update(dailyFulfillments)
+        .set({
+          status: fulfillment.status,
+          deliveredAt: fulfillment.deliveredAt ? new Date(fulfillment.deliveredAt) : null,
+          notes: fulfillment.notes || null,
+          actionTakenAt: now,
+        })
+        .where(eq(dailyFulfillments.id, fulfillment.id))
+        .catch((err) => console.error("Failed to persist fulfillment transition to Neon DB:", err));
+    }
+
     return fulfillment;
   }
 
   static getById(id: string): DailyFulfillment | null {
     return fulfillmentStore.get(id) || null;
+  }
+
+  static async getByIdAsync(id: string): Promise<DailyFulfillment | null> {
+    const memory = fulfillmentStore.get(id);
+    if (memory) return memory;
+
+    if (!isTestEnv) {
+      try {
+        const rows = await db
+          .select({
+            f: dailyFulfillments,
+            customerName: users.fullName,
+            customerPhone: users.phone,
+            productName: products.name,
+            productId: products.id,
+            societyName: households.societyName,
+            towerWing: households.towerWing,
+            flatNumber: households.flatNumber,
+          })
+          .from(dailyFulfillments)
+          .leftJoin(users, eq(dailyFulfillments.customerId, users.id))
+          .leftJoin(subscriptions, eq(dailyFulfillments.subscriptionId, subscriptions.id))
+          .leftJoin(products, eq(subscriptions.productId, products.id))
+          .leftJoin(households, eq(dailyFulfillments.householdId, households.id))
+          .where(eq(dailyFulfillments.id, id));
+
+        if (rows.length > 0) {
+          const r = rows[0];
+          const addressSummary = r.societyName
+            ? `${r.societyName}, ${r.towerWing}-${r.flatNumber}`
+            : undefined;
+          const res: DailyFulfillment = {
+            id: r.f.id,
+            tenantId: r.f.tenantId,
+            subscriptionId: r.f.subscriptionId,
+            customerId: r.f.customerId,
+            customerName: r.customerName || undefined,
+            customerPhone: r.customerPhone || undefined,
+            householdId: r.f.householdId || undefined,
+            addressSummary,
+            serviceDate: r.f.serviceDate,
+            shift: r.f.shift as any,
+            status: r.f.status as any,
+            items: [
+              {
+                productId: r.productId || "prod_default",
+                productName: r.productName || "Standard Daily Service",
+                quantity: r.f.quantity,
+                unitPricePaise: r.f.unitPricePaise as Paise,
+                totalPricePaise: r.f.totalPricePaise as Paise,
+              },
+            ],
+            totalPricePaise: r.f.totalPricePaise as Paise,
+            cutoffTime: r.f.cutoffTime ? r.f.cutoffTime.toISOString() : "10:00 AM",
+            deliveredAt: r.f.deliveredAt ? r.f.deliveredAt.toISOString() : undefined,
+            notes: r.f.notes || undefined,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          };
+          fulfillmentStore.set(res.id, res);
+          return res;
+        }
+      } catch (err) {
+        console.error("Failed to fetch fulfillment by ID from Neon DB:", err);
+      }
+    }
+
+    return null;
   }
 
   static save(fulfillment: DailyFulfillment): void {
@@ -130,8 +220,131 @@ export class FulfillmentStateMachine {
     );
   }
 
+  static async listByTenantAndDateAsync(tenantId: string, serviceDate: string): Promise<DailyFulfillment[]> {
+    if (!isTestEnv) {
+      try {
+        const rows = await db
+          .select({
+            f: dailyFulfillments,
+            customerName: users.fullName,
+            customerPhone: users.phone,
+            productName: products.name,
+            productId: products.id,
+            societyName: households.societyName,
+            towerWing: households.towerWing,
+            flatNumber: households.flatNumber,
+          })
+          .from(dailyFulfillments)
+          .leftJoin(users, eq(dailyFulfillments.customerId, users.id))
+          .leftJoin(subscriptions, eq(dailyFulfillments.subscriptionId, subscriptions.id))
+          .leftJoin(products, eq(subscriptions.productId, products.id))
+          .leftJoin(households, eq(dailyFulfillments.householdId, households.id))
+          .where(
+            and(
+              eq(dailyFulfillments.tenantId, tenantId),
+              eq(dailyFulfillments.serviceDate, serviceDate)
+            )
+          );
+
+        if (rows.length > 0) {
+          return rows.map((r) => ({
+            id: r.f.id,
+            tenantId: r.f.tenantId,
+            subscriptionId: r.f.subscriptionId,
+            customerId: r.f.customerId,
+            customerName: r.customerName || undefined,
+            customerPhone: r.customerPhone || undefined,
+            householdId: r.f.householdId || undefined,
+            addressSummary: r.societyName ? `${r.societyName}, ${r.towerWing}-${r.flatNumber}` : undefined,
+            serviceDate: r.f.serviceDate,
+            shift: r.f.shift as any,
+            status: r.f.status as any,
+            items: [
+              {
+                productId: r.productId || "prod_default",
+                productName: r.productName || "Standard Daily Service",
+                quantity: r.f.quantity,
+                unitPricePaise: r.f.unitPricePaise as Paise,
+                totalPricePaise: r.f.totalPricePaise as Paise,
+              },
+            ],
+            totalPricePaise: r.f.totalPricePaise as Paise,
+            cutoffTime: r.f.cutoffTime ? r.f.cutoffTime.toISOString() : "10:00 AM",
+            deliveredAt: r.f.deliveredAt ? r.f.deliveredAt.toISOString() : undefined,
+            notes: r.f.notes || undefined,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          }));
+        }
+      } catch (err) {
+        console.error("Failed to query fulfillments by tenant and date from Neon DB:", err);
+      }
+    }
+
+    return this.listByTenantAndDate(tenantId, serviceDate);
+  }
+
   static listByCustomer(customerId: string): DailyFulfillment[] {
     return Array.from(fulfillmentStore.values()).filter((f) => f.customerId === customerId);
+  }
+
+  static async listByCustomerAsync(customerId: string): Promise<DailyFulfillment[]> {
+    if (!isTestEnv) {
+      try {
+        const rows = await db
+          .select({
+            f: dailyFulfillments,
+            customerName: users.fullName,
+            customerPhone: users.phone,
+            productName: products.name,
+            productId: products.id,
+            societyName: households.societyName,
+            towerWing: households.towerWing,
+            flatNumber: households.flatNumber,
+          })
+          .from(dailyFulfillments)
+          .leftJoin(users, eq(dailyFulfillments.customerId, users.id))
+          .leftJoin(subscriptions, eq(dailyFulfillments.subscriptionId, subscriptions.id))
+          .leftJoin(products, eq(subscriptions.productId, products.id))
+          .leftJoin(households, eq(dailyFulfillments.householdId, households.id))
+          .where(eq(dailyFulfillments.customerId, customerId));
+
+        if (rows.length > 0) {
+          return rows.map((r) => ({
+            id: r.f.id,
+            tenantId: r.f.tenantId,
+            subscriptionId: r.f.subscriptionId,
+            customerId: r.f.customerId,
+            customerName: r.customerName || undefined,
+            customerPhone: r.customerPhone || undefined,
+            householdId: r.f.householdId || undefined,
+            addressSummary: r.societyName ? `${r.societyName}, ${r.towerWing}-${r.flatNumber}` : undefined,
+            serviceDate: r.f.serviceDate,
+            shift: r.f.shift as any,
+            status: r.f.status as any,
+            items: [
+              {
+                productId: r.productId || "prod_default",
+                productName: r.productName || "Standard Daily Service",
+                quantity: r.f.quantity,
+                unitPricePaise: r.f.unitPricePaise as Paise,
+                totalPricePaise: r.f.totalPricePaise as Paise,
+              },
+            ],
+            totalPricePaise: r.f.totalPricePaise as Paise,
+            cutoffTime: r.f.cutoffTime ? r.f.cutoffTime.toISOString() : "10:00 AM",
+            deliveredAt: r.f.deliveredAt ? r.f.deliveredAt.toISOString() : undefined,
+            notes: r.f.notes || undefined,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          }));
+        }
+      } catch (err) {
+        console.error("Failed to query fulfillments by customer from Neon DB:", err);
+      }
+    }
+
+    return this.listByCustomer(customerId);
   }
 
   static clearStore(): void {

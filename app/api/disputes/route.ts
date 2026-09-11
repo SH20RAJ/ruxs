@@ -9,12 +9,12 @@ export async function GET(request: Request) {
   const status = searchParams.get("status") || undefined;
 
   if (tenantId) {
-    const list = DisputeService.listByTenant(tenantId, status);
+    const list = await DisputeService.listByTenantAsync(tenantId, status);
     return Response.json(createSuccessResponse(list));
   }
 
   if (customerId) {
-    const list = DisputeService.listByCustomer(customerId);
+    const list = await DisputeService.listByCustomerAsync(customerId);
     return Response.json(createSuccessResponse(list));
   }
 

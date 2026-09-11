@@ -266,3 +266,212 @@ export const payments = pgTable(
     index("payments_status_idx").on(table.status),
   ]
 );
+
+// ---------------------------------------------------------------------------
+// 11. Asset Holdings & Movements (20L Cans, Tiffin Boxes, Crates)
+// ---------------------------------------------------------------------------
+export const assetHoldings = pgTable(
+  "asset_holdings",
+  {
+    id: varchar("id", { length: 36 }).primaryKey(),
+    tenantId: varchar("tenant_id", { length: 36 }).references(() => tenants.id).notNull(),
+    customerId: varchar("customer_id", { length: 36 }).references(() => users.id).notNull(),
+    assetType: varchar("asset_type", { length: 50 }).notNull(),
+    holdingCount: integer("holding_count").default(0).notNull(),
+    depositPerUnitPaise: integer("deposit_per_unit_paise").default(0).notNull(),
+    totalDepositHeldPaise: integer("total_deposit_held_paise").default(0).notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [
+    index("asset_holdings_tenant_cust_idx").on(table.tenantId, table.customerId),
+  ]
+);
+
+export const assetMovements = pgTable(
+  "asset_movements",
+  {
+    id: varchar("id", { length: 36 }).primaryKey(),
+    tenantId: varchar("tenant_id", { length: 36 }).references(() => tenants.id).notNull(),
+    customerId: varchar("customer_id", { length: 36 }).references(() => users.id).notNull(),
+    assetType: varchar("asset_type", { length: 50 }).notNull(),
+    quantityDelivered: integer("quantity_delivered").default(0).notNull(),
+    quantityCollected: integer("quantity_collected").default(0).notNull(),
+    netDelta: integer("net_delta").notNull(),
+    resultingHoldingCount: integer("resulting_holding_count").notNull(),
+    fulfillmentId: varchar("fulfillment_id", { length: 36 }),
+    notes: text("notes"),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [
+    index("asset_movements_tenant_cust_idx").on(table.tenantId, table.customerId),
+  ]
+);
+
+// ---------------------------------------------------------------------------
+// 12. Vacation Mode Schedules
+// ---------------------------------------------------------------------------
+export const vacations = pgTable(
+  "vacations",
+  {
+    id: varchar("id", { length: 36 }).primaryKey(),
+    customerId: varchar("customer_id", { length: 36 }).references(() => users.id).notNull(),
+    startDate: varchar("start_date", { length: 10 }).notNull(),
+    endDate: varchar("end_date", { length: 10 }).notNull(),
+    isGlobal: boolean("is_global").default(true).notNull(),
+    subscriptionIds: text("subscription_ids"), // JSON array or comma list
+    status: varchar("status", { length: 20 }).default("ACTIVE").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [
+    index("vacations_customer_dates_idx").on(table.customerId, table.startDate, table.endDate),
+  ]
+);
+
+// ---------------------------------------------------------------------------
+// 13. Delivery Runs & Stops
+// ---------------------------------------------------------------------------
+export const deliveryRuns = pgTable(
+  "delivery_runs",
+  {
+    id: varchar("id", { length: 36 }).primaryKey(),
+    tenantId: varchar("tenant_id", { length: 36 }).references(() => tenants.id).notNull(),
+    driverId: varchar("driver_id", { length: 36 }).references(() => users.id).notNull(),
+    driverName: varchar("driver_name", { length: 255 }).notNull(),
+    date: varchar("date", { length: 10 }).notNull(),
+    shift: varchar("shift", { length: 20 }).default("MORNING").notNull(),
+    totalStops: integer("total_stops").default(0).notNull(),
+    completedStops: integer("completed_stops").default(0).notNull(),
+    skippedStops: integer("skipped_stops").default(0).notNull(),
+    failedStops: integer("failed_stops").default(0).notNull(),
+    status: varchar("status", { length: 20 }).default("IN_PROGRESS").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [
+    index("delivery_runs_tenant_date_idx").on(table.tenantId, table.date),
+  ]
+);
+
+export const deliveryStops = pgTable(
+  "delivery_stops",
+  {
+    id: varchar("id", { length: 36 }).primaryKey(),
+    runId: varchar("run_id", { length: 36 }).references(() => deliveryRuns.id).notNull(),
+    fulfillmentId: varchar("fulfillment_id", { length: 36 }),
+    customerId: varchar("customer_id", { length: 36 }).references(() => users.id).notNull(),
+    customerName: varchar("customer_name", { length: 255 }).notNull(),
+    customerPhone: varchar("customer_phone", { length: 20 }).notNull(),
+    society: varchar("society", { length: 255 }).notNull(),
+    tower: varchar("tower", { length: 50 }).notNull(),
+    floor: integer("floor").notNull(),
+    flat: varchar("flat", { length: 50 }).notNull(),
+    serviceName: varchar("service_name", { length: 255 }).notNull(),
+    quantity: integer("quantity").default(1).notNull(),
+    status: varchar("status", { length: 20 }).default("PENDING").notNull(),
+    dropPreference: varchar("drop_preference", { length: 30 }).default("DOORSTEP").notNull(),
+    notes: text("notes"),
+    deliveredAt: varchar("delivered_at", { length: 30 }),
+    failureReason: text("failure_reason"),
+    assetDelivered: integer("asset_delivered").default(0).notNull(),
+    assetCollected: integer("asset_collected").default(0).notNull(),
+  },
+  (table) => [
+    index("delivery_stops_run_idx").on(table.runId),
+  ]
+);
+
+// ---------------------------------------------------------------------------
+// 14. Disputes & Quality Claims
+// ---------------------------------------------------------------------------
+export const disputes = pgTable(
+  "disputes",
+  {
+    id: varchar("id", { length: 36 }).primaryKey(),
+    tenantId: varchar("tenant_id", { length: 36 }).references(() => tenants.id).notNull(),
+    customerId: varchar("customer_id", { length: 36 }).references(() => users.id).notNull(),
+    customerName: varchar("customer_name", { length: 255 }).notNull(),
+    customerPhone: varchar("customer_phone", { length: 20 }).notNull(),
+    fulfillmentId: varchar("fulfillment_id", { length: 36 }).notNull(),
+    reason: varchar("reason", { length: 50 }).notNull(),
+    disputedAmountPaise: integer("disputed_amount_paise").notNull(),
+    status: varchar("status", { length: 20 }).default("OPEN").notNull(),
+    driverDeliveredAt: varchar("driver_delivered_at", { length: 30 }),
+    driverDropNotes: text("driver_drop_notes"),
+    customerComment: text("customer_comment"),
+    decision: varchar("decision", { length: 30 }),
+    refundPaise: integer("refund_paise"),
+    resolutionNotes: text("resolution_notes"),
+    resolvedBy: varchar("resolved_by", { length: 100 }),
+    resolvedAt: timestamp("resolved_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [
+    index("disputes_tenant_cust_idx").on(table.tenantId, table.customerId),
+    index("disputes_status_idx").on(table.status),
+  ]
+);
+
+// ---------------------------------------------------------------------------
+// 15. Platform Audit Logs
+// ---------------------------------------------------------------------------
+export const auditLogs = pgTable(
+  "audit_logs",
+  {
+    id: varchar("id", { length: 36 }).primaryKey(),
+    adminUserId: varchar("admin_user_id", { length: 36 }).notNull(),
+    adminEmail: varchar("admin_email", { length: 255 }).notNull(),
+    action: varchar("action", { length: 50 }).notNull(),
+    targetType: varchar("target_type", { length: 30 }).notNull(),
+    targetId: varchar("target_id", { length: 36 }).notNull(),
+    details: text("details").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [
+    index("audit_logs_target_idx").on(table.targetType, table.targetId),
+    index("audit_logs_created_idx").on(table.createdAt),
+  ]
+);
+
+// ---------------------------------------------------------------------------
+// 16. Household Expense Splitting
+// ---------------------------------------------------------------------------
+export const householdExpenses = pgTable(
+  "household_expenses",
+  {
+    id: varchar("id", { length: 36 }).primaryKey(),
+    householdId: varchar("household_id", { length: 36 }).references(() => households.id).notNull(),
+    invoiceId: varchar("invoice_id", { length: 36 }),
+    description: varchar("description", { length: 255 }).notNull(),
+    totalAmountPaise: integer("total_amount_paise").notNull(),
+    paidByUserId: varchar("paid_by_user_id", { length: 36 }).references(() => users.id).notNull(),
+    paidByName: varchar("paid_by_name", { length: 255 }).notNull(),
+    paidByUpi: varchar("paid_by_upi", { length: 100 }).notNull(),
+    strategy: varchar("strategy", { length: 20 }).default("EQUAL").notNull(),
+    isFullySettled: boolean("is_fully_settled").default(false).notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [
+    index("expenses_household_idx").on(table.householdId),
+  ]
+);
+
+export const householdExpenseParticipants = pgTable(
+  "household_expense_participants",
+  {
+    id: varchar("id", { length: 36 }).primaryKey(),
+    expenseId: varchar("expense_id", { length: 36 }).references(() => householdExpenses.id).notNull(),
+    userId: varchar("user_id", { length: 36 }).references(() => users.id).notNull(),
+    name: varchar("name", { length: 255 }).notNull(),
+    phone: varchar("phone", { length: 20 }).notNull(),
+    sharePaise: integer("share_paise").notNull(),
+    isSettled: boolean("is_settled").default(false).notNull(),
+    settledAt: timestamp("settled_at", { withTimezone: true }),
+    upiId: varchar("upi_id", { length: 100 }),
+  },
+  (table) => [
+    index("expense_participants_exp_idx").on(table.expenseId),
+  ]
+);
+

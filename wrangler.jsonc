@@ -21,7 +21,7 @@
 	"observability": {
 		"enabled": true
 	},
-	"upload_source_maps": true
+	"upload_source_maps": true,
 	/**
 	 * Smart Placement
 	 * https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
@@ -39,7 +39,16 @@
 	 * Note: Use secrets to store sensitive data.
 	 * https://developers.cloudflare.com/workers/configuration/secrets/
 	 */
-	// "vars": {  "MY_VARIABLE": "production_value" }
+	"vars": {
+		"HEXCLAVE_PROJECT_ID": "afdff151-7a3c-49b3-830f-abfcc23d8d61",
+		"NEXT_PUBLIC_HEXCLAVE_PROJECT_ID": "afdff151-7a3c-49b3-830f-abfcc23d8d61",
+		"HEXCLAVE_API_URL": "https://apigcp.hexclave.com",
+		"HEXCLAVE_DASHBOARD_URL": "https://app.stack-auth.com",
+		"NEXT_PUBLIC_APP_URL": "https://ruxs.in",
+		"APP_URL": "https://ruxs.in",
+		"PRIMARY_DOMAIN": "ruxs.in",
+		"NEXT_PUBLIC_BRAND_NAME": "RUXS"
+	}
 	/**
 	 * Service Bindings (communicate between multiple Workers)
 	 * https://developers.cloudflare.com/workers/wrangler/configuration/#service-bindings

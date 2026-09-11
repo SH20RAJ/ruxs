@@ -156,4 +156,96 @@ export class CutoffEngine {
       cutoffTimeStr,
     };
   }
+
+  static async getKitchenBatchCounterAsync(
+    tenantId: string,
+    serviceDate: string,
+    shift: string = "LUNCH"
+  ): Promise<KitchenPrepBatch> {
+    const list = (await FulfillmentStateMachine.listByTenantAndDateAsync(tenantId, serviceDate)).filter(
+      (f) => f.shift === shift
+    );
+
+    let totalScheduled = 0;
+    let totalConfirmed = 0;
+    let totalInPrep = 0;
+    let totalOutForDelivery = 0;
+    let totalDelivered = 0;
+    let totalSkipped = 0;
+    let totalLateSkips = 0;
+    let isCutoffLocked = false;
+    let cutoffTimeStr = "";
+
+    const skuBreakdown: Record<string, { productName: string; quantity: number; totalPaise: Paise }> = {};
+
+    for (const f of list) {
+      if (f.cutoffTime && !cutoffTimeStr) {
+        cutoffTimeStr = f.cutoffTime;
+      }
+
+      switch (f.status) {
+        case "SCHEDULED":
+        case "CONFIRMATION_REQUIRED":
+          totalScheduled++;
+          break;
+        case "CONFIRMED":
+          totalConfirmed++;
+          break;
+        case "IN_PREPARATION":
+          totalInPrep++;
+          isCutoffLocked = true;
+          break;
+        case "OUT_FOR_DELIVERY":
+          totalOutForDelivery++;
+          isCutoffLocked = true;
+          break;
+        case "DELIVERED":
+          totalDelivered++;
+          isCutoffLocked = true;
+          break;
+        case "SKIPPED":
+          totalSkipped++;
+          break;
+        case "LATE_SKIP":
+          totalLateSkips++;
+          break;
+      }
+
+      if (
+        f.status === "CONFIRMED" ||
+        f.status === "IN_PREPARATION" ||
+        f.status === "OUT_FOR_DELIVERY" ||
+        f.status === "DELIVERED"
+      ) {
+        for (const item of f.items) {
+          if (!skuBreakdown[item.productId]) {
+            skuBreakdown[item.productId] = {
+              productName: item.productName,
+              quantity: 0,
+              totalPaise: 0 as Paise,
+            };
+          }
+          skuBreakdown[item.productId].quantity += item.quantity;
+          skuBreakdown[item.productId].totalPaise = (skuBreakdown[item.productId].totalPaise +
+            item.totalPricePaise) as Paise;
+        }
+      }
+    }
+
+    return {
+      tenantId,
+      serviceDate,
+      shift,
+      totalScheduled,
+      totalConfirmed,
+      totalInPrep,
+      totalOutForDelivery,
+      totalDelivered,
+      totalSkipped,
+      totalLateSkips,
+      skuBreakdown,
+      isCutoffLocked,
+      cutoffTimeStr,
+    };
+  }
 }

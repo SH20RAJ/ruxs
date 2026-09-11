@@ -9,7 +9,10 @@ export async function POST(
 ) {
   try {
     const { id } = await params;
-    const fulfillment = FulfillmentStateMachine.getById(id);
+    let fulfillment = await FulfillmentStateMachine.getByIdAsync(id);
+    if (!fulfillment) {
+      fulfillment = FulfillmentStateMachine.getById(id);
+    }
 
     if (!fulfillment) {
       return Response.json(

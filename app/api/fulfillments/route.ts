@@ -8,12 +8,12 @@ export async function GET(request: Request) {
   const customerId = searchParams.get("customerId");
 
   if (tenantId && date) {
-    const list = FulfillmentStateMachine.listByTenantAndDate(tenantId, date);
+    const list = await FulfillmentStateMachine.listByTenantAndDateAsync(tenantId, date);
     return Response.json(createSuccessResponse(list));
   }
 
   if (customerId) {
-    const list = FulfillmentStateMachine.listByCustomer(customerId);
+    const list = await FulfillmentStateMachine.listByCustomerAsync(customerId);
     return Response.json(createSuccessResponse(list));
   }
 

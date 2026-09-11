@@ -14,7 +14,7 @@ export async function GET(request: Request) {
     );
   }
 
-  const run = DeliveryEngine.getRunSheet(runId);
+  const run = await DeliveryEngine.getRunSheetAsync(runId);
   if (!run) {
     return Response.json(
       createErrorResponse("NOT_FOUND", `Run sheet ${runId} not found`),

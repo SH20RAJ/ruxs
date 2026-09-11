@@ -6,6 +6,9 @@ import {
 } from "./billing-schema";
 import { KhataLedgerService } from "../khata/khata-ledger";
 import { Paise, addPaise, subtractPaise } from "../../shared/types/money";
+import { db, isTestEnv } from "../../shared/db";
+import { invoices as invoicesTable } from "../../shared/db/schema";
+import { eq } from "drizzle-orm";
 
 const invoiceStore = new Map<string, Invoice>();
 let invoiceSequence = 1;
@@ -82,6 +85,30 @@ export class BillingEngine {
     };
 
     invoiceStore.set(invoiceId, invoice);
+
+    if (!isTestEnv) {
+      try {
+        await db.insert(invoicesTable).values({
+          id: invoiceId,
+          tenantId: validated.tenantId,
+          customerId: validated.customerId,
+          householdId: null,
+          invoiceNumber,
+          periodStart: validated.periodStart,
+          periodEnd: validated.periodEnd,
+          dueDate,
+          subtotalPaise: subtotal,
+          discountPaise: discount,
+          taxPaise: tax,
+          totalAmountDuePaise: totalAmountDue,
+          amountPaidPaise: creditsAlreadyPaid,
+          status: totalAmountDue === 0 ? "PAID" : "ISSUED",
+        });
+      } catch (err) {
+        console.error("Failed to insert invoice into Neon DB:", err);
+      }
+    }
+
     return invoice;
   }
 
@@ -92,7 +119,10 @@ export class BillingEngine {
     invoiceId: string,
     paidAmountPaise: Paise
   ): Promise<Invoice> {
-    const inv = invoiceStore.get(invoiceId);
+    let inv = invoiceStore.get(invoiceId);
+    if (!inv && !isTestEnv) {
+      inv = (await this.getById(invoiceId)) || undefined;
+    }
     if (!inv) throw new Error("Invoice not found");
 
     const newAmountPaid = addPaise(inv.amountPaidPaise, paidAmountPaise);
@@ -106,18 +136,160 @@ export class BillingEngine {
     }
 
     invoiceStore.set(invoiceId, inv);
+
+    if (!isTestEnv) {
+      try {
+        await db
+          .update(invoicesTable)
+          .set({
+            amountPaidPaise: newAmountPaid,
+            status: inv.status,
+          })
+          .where(eq(invoicesTable.id, invoiceId));
+      } catch (err) {
+        console.error("Failed to update invoice payment in Neon DB:", err);
+      }
+    }
+
     return inv;
   }
 
   static async getById(invoiceId: string): Promise<Invoice | null> {
-    return invoiceStore.get(invoiceId) || null;
+    const memory = invoiceStore.get(invoiceId);
+    if (memory) return memory;
+
+    if (!isTestEnv) {
+      try {
+        const rows = await db
+          .select()
+          .from(invoicesTable)
+          .where(eq(invoicesTable.id, invoiceId));
+
+        if (rows.length > 0) {
+          const r = rows[0];
+          return {
+            id: r.id,
+            invoiceNumber: r.invoiceNumber,
+            tenantId: r.tenantId,
+            customerId: r.customerId,
+            householdId: r.householdId || undefined,
+            periodStart: r.periodStart,
+            periodEnd: r.periodEnd,
+            dueDate: r.dueDate,
+            items: [
+              {
+                id: `item_${r.id}`,
+                description: `Monthly billing statement (${r.periodStart} to ${r.periodEnd})`,
+                quantity: 1,
+                unitPricePaise: r.subtotalPaise as Paise,
+                totalPaise: r.subtotalPaise as Paise,
+              },
+            ],
+            subtotalPaise: r.subtotalPaise as Paise,
+            previousBalancePaise: 0 as Paise,
+            discountPaise: r.discountPaise as Paise,
+            taxPaise: r.taxPaise as Paise,
+            totalAmountDuePaise: r.totalAmountDuePaise as Paise,
+            amountPaidPaise: r.amountPaidPaise as Paise,
+            status: r.status as any,
+            createdAt: r.createdAt ? r.createdAt.toISOString() : new Date().toISOString(),
+          };
+        }
+      } catch (err) {
+        console.error("Failed to fetch invoice by ID from Neon DB:", err);
+      }
+    }
+
+    return null;
   }
 
   static async listByCustomer(customerId: string): Promise<Invoice[]> {
+    if (!isTestEnv) {
+      try {
+        const rows = await db
+          .select()
+          .from(invoicesTable)
+          .where(eq(invoicesTable.customerId, customerId));
+
+        if (rows.length > 0) {
+          return rows.map((r) => ({
+            id: r.id,
+            invoiceNumber: r.invoiceNumber,
+            tenantId: r.tenantId,
+            customerId: r.customerId,
+            householdId: r.householdId || undefined,
+            periodStart: r.periodStart,
+            periodEnd: r.periodEnd,
+            dueDate: r.dueDate,
+            items: [
+              {
+                id: `item_${r.id}`,
+                description: `Monthly billing statement (${r.periodStart} to ${r.periodEnd})`,
+                quantity: 1,
+                unitPricePaise: r.subtotalPaise as Paise,
+                totalPaise: r.subtotalPaise as Paise,
+              },
+            ],
+            subtotalPaise: r.subtotalPaise as Paise,
+            previousBalancePaise: 0 as Paise,
+            discountPaise: r.discountPaise as Paise,
+            taxPaise: r.taxPaise as Paise,
+            totalAmountDuePaise: r.totalAmountDuePaise as Paise,
+            amountPaidPaise: r.amountPaidPaise as Paise,
+            status: r.status as any,
+            createdAt: r.createdAt ? r.createdAt.toISOString() : new Date().toISOString(),
+          }));
+        }
+      } catch (err) {
+        console.error("Failed to list invoices by customer from Neon DB:", err);
+      }
+    }
+
     return Array.from(invoiceStore.values()).filter((i) => i.customerId === customerId);
   }
 
   static async listByTenant(tenantId: string): Promise<Invoice[]> {
+    if (!isTestEnv) {
+      try {
+        const rows = await db
+          .select()
+          .from(invoicesTable)
+          .where(eq(invoicesTable.tenantId, tenantId));
+
+        if (rows.length > 0) {
+          return rows.map((r) => ({
+            id: r.id,
+            invoiceNumber: r.invoiceNumber,
+            tenantId: r.tenantId,
+            customerId: r.customerId,
+            householdId: r.householdId || undefined,
+            periodStart: r.periodStart,
+            periodEnd: r.periodEnd,
+            dueDate: r.dueDate,
+            items: [
+              {
+                id: `item_${r.id}`,
+                description: `Monthly billing statement (${r.periodStart} to ${r.periodEnd})`,
+                quantity: 1,
+                unitPricePaise: r.subtotalPaise as Paise,
+                totalPaise: r.subtotalPaise as Paise,
+              },
+            ],
+            subtotalPaise: r.subtotalPaise as Paise,
+            previousBalancePaise: 0 as Paise,
+            discountPaise: r.discountPaise as Paise,
+            taxPaise: r.taxPaise as Paise,
+            totalAmountDuePaise: r.totalAmountDuePaise as Paise,
+            amountPaidPaise: r.amountPaidPaise as Paise,
+            status: r.status as any,
+            createdAt: r.createdAt ? r.createdAt.toISOString() : new Date().toISOString(),
+          }));
+        }
+      } catch (err) {
+        console.error("Failed to list invoices by tenant from Neon DB:", err);
+      }
+    }
+
     return Array.from(invoiceStore.values()).filter((i) => i.tenantId === tenantId);
   }
 

@@ -2,6 +2,12 @@ import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import "./globals.css";
 import { PwaManager } from "./components/PwaManager";
+import { Geist } from "next/font/google";
+import { cn } from "@/lib/utils";
+import { HexclaveProvider, HexclaveTheme } from "@hexclave/next";
+import { hexclaveServerApp } from "@/src/hexclave/server";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 export const viewport: Viewport = {
   themeColor: "#090d16",
@@ -67,25 +73,25 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
-      <body className="flex min-h-screen flex-col bg-[#090d16] text-slate-100 selection:bg-emerald-500 selection:text-slate-950 pb-20 sm:pb-0">
+    <html lang="en" className={cn("dark", "font-sans", geist.variable)}>
+      <body className="flex min-h-screen flex-col bg-background text-foreground antialiased pb-20 sm:pb-0">
         <PwaManager />
         {/* Global Desktop & Tablet Header */}
-        <header className="sticky top-0 z-40 border-b border-white/10 bg-[#090d16]/85 backdrop-blur-md">
+        <header className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur-md">
           <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
             <Link href="/" className="flex items-center gap-3 group">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-emerald-500 to-indigo-600 shadow-lg shadow-emerald-500/20 transition group-hover:scale-105">
-                <span className="text-base font-black tracking-wider text-slate-950">R</span>
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-lg transition group-hover:scale-105">
+                <span className="text-base font-black tracking-wider">R</span>
               </div>
               <div className="flex flex-col">
                 <div className="flex items-center gap-1.5">
-                  <span className="text-lg font-black tracking-tight text-white">RUXS</span>
-                  <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-400">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="text-lg font-black tracking-tight text-foreground">RUXS</span>
+                  <span className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/10 px-1.5 py-0.5 text-[10px] font-semibold text-primary">
+                    <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
                     Autopilot
                   </span>
                 </div>
-                <span className="text-[10px] text-slate-400 -mt-0.5">ruxs.in</span>
+                <span className="text-[10px] text-muted-foreground -mt-0.5">ruxs.in</span>
               </div>
             </Link>
 
@@ -127,7 +133,11 @@ export default function RootLayout({
         </header>
 
         {/* Main Content Area */}
-        <main className="flex-1">{children}</main>
+        <HexclaveProvider app={hexclaveServerApp}>
+          <HexclaveTheme>
+            <main className="flex-1">{children}</main>
+          </HexclaveTheme>
+        </HexclaveProvider>
 
         {/* Global Footer */}
         <footer className="border-t border-white/10 bg-[#060910] py-12 text-slate-400 text-xs">

@@ -10,6 +10,9 @@ import { FulfillmentStateMachine } from "../fulfillment/fulfillment-fsm";
 import { KhataLedgerService } from "../khata/khata-ledger";
 import { KhataEntry } from "../khata/khata-schema";
 import { Paise } from "../../shared/types/money";
+import { db, isTestEnv } from "../../shared/db";
+import { disputes as disputesTable, users as usersTable } from "../../shared/db/schema";
+import { eq, and, desc } from "drizzle-orm";
 
 const disputesStore = new Map<string, Dispute>();
 
@@ -55,6 +58,26 @@ export class DisputeService {
     });
 
     disputesStore.set(disputeId, dispute);
+
+    if (!isTestEnv) {
+      db.insert(disputesTable)
+        .values({
+          id: dispute.id,
+          tenantId: dispute.tenantId,
+          customerId: dispute.customerId,
+          customerName: dispute.customerName,
+          customerPhone: dispute.customerPhone,
+          fulfillmentId: dispute.fulfillmentId,
+          reason: dispute.reason,
+          disputedAmountPaise: Number(dispute.disputedAmountPaise),
+          status: dispute.status,
+          driverDeliveredAt: dispute.evidence?.driverDeliveredAt,
+          driverDropNotes: dispute.evidence?.driverDropNotes,
+          customerComment: dispute.evidence?.customerComment,
+        })
+        .catch(() => {});
+    }
+
     return dispute;
   }
 
@@ -107,6 +130,21 @@ export class DisputeService {
     dispute.updatedAt = new Date().toISOString();
     disputesStore.set(dispute.id, dispute);
 
+    if (!isTestEnv) {
+      db.update(disputesTable)
+        .set({
+          status: dispute.status,
+          decision: resolution.decision,
+          refundPaise: resolution.refundPaise,
+          resolutionNotes: resolution.resolutionNotes,
+          resolvedBy: resolution.resolvedBy,
+          resolvedAt: new Date(),
+          updatedAt: new Date(),
+        })
+        .where(eq(disputesTable.id, dispute.id))
+        .catch(() => {});
+    }
+
     return { dispute, compensatingEntry };
   }
 
@@ -129,9 +167,110 @@ export class DisputeService {
   }
 
   /**
+   * Lists disputes for a vendor tenant from Neon DB
+   */
+  static async listByTenantAsync(tenantId: string, status?: string): Promise<Dispute[]> {
+    if (!isTestEnv) {
+      try {
+        const rows = await db
+          .select()
+          .from(disputesTable)
+          .where(eq(disputesTable.tenantId, tenantId))
+          .orderBy(desc(disputesTable.createdAt));
+
+        if (rows && rows.length > 0) {
+          const mapped: Dispute[] = rows.map((d) => ({
+            id: d.id,
+            tenantId: d.tenantId,
+            customerId: d.customerId,
+            customerName: d.customerName,
+            customerPhone: d.customerPhone,
+            fulfillmentId: d.fulfillmentId,
+            reason: d.reason as any,
+            disputedAmountPaise: d.disputedAmountPaise as Paise,
+            status: d.status as any,
+            evidence: {
+              driverDeliveredAt: d.driverDeliveredAt ?? undefined,
+              driverDropNotes: d.driverDropNotes ?? undefined,
+              customerComment: d.customerComment || "No comment provided",
+            },
+            resolution: d.decision
+              ? {
+                  decision: d.decision as any,
+                  refundPaise: d.refundPaise ?? 0,
+                  resolutionNotes: d.resolutionNotes ?? "",
+                  resolvedBy: d.resolvedBy ?? "",
+                  resolvedAt: d.resolvedAt ? d.resolvedAt.toISOString() : new Date().toISOString(),
+                }
+              : undefined,
+            createdAt: d.createdAt.toISOString(),
+            updatedAt: d.updatedAt.toISOString(),
+          }));
+
+          if (status) {
+            return mapped.filter((d) => d.status === status);
+          }
+          return mapped;
+        }
+      } catch {
+        // Fallback
+      }
+    }
+    return this.listByTenant(tenantId, status);
+  }
+
+  /**
    * Lists disputes filed by a customer
    */
   static listByCustomer(customerId: string): Dispute[] {
     return Array.from(disputesStore.values()).filter((d) => d.customerId === customerId);
+  }
+
+  /**
+   * Lists disputes filed by a customer from Neon DB
+   */
+  static async listByCustomerAsync(customerId: string): Promise<Dispute[]> {
+    if (!isTestEnv) {
+      try {
+        const rows = await db
+          .select()
+          .from(disputesTable)
+          .where(eq(disputesTable.customerId, customerId))
+          .orderBy(desc(disputesTable.createdAt));
+
+        if (rows && rows.length > 0) {
+          return rows.map((d) => ({
+            id: d.id,
+            tenantId: d.tenantId,
+            customerId: d.customerId,
+            customerName: d.customerName,
+            customerPhone: d.customerPhone,
+            fulfillmentId: d.fulfillmentId,
+            reason: d.reason as any,
+            disputedAmountPaise: d.disputedAmountPaise as Paise,
+            status: d.status as any,
+            evidence: {
+              driverDeliveredAt: d.driverDeliveredAt ?? undefined,
+              driverDropNotes: d.driverDropNotes ?? undefined,
+              customerComment: d.customerComment || "No comment provided",
+            },
+            resolution: d.decision
+              ? {
+                  decision: d.decision as any,
+                  refundPaise: d.refundPaise ?? 0,
+                  resolutionNotes: d.resolutionNotes ?? "",
+                  resolvedBy: d.resolvedBy ?? "",
+                  resolvedAt: d.resolvedAt ? d.resolvedAt.toISOString() : new Date().toISOString(),
+                }
+              : undefined,
+            createdAt: d.createdAt.toISOString(),
+            updatedAt: d.updatedAt.toISOString(),
+          }));
+        }
+      } catch {
+        // Fallback
+      }
+    }
+    return this.listByCustomer(customerId);
   }
 }

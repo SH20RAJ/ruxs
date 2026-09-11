@@ -8,7 +8,7 @@ export async function GET(request: Request) {
   const userId = searchParams.get("userId");
 
   if (householdId) {
-    const household = HouseholdService.getHousehold(householdId);
+    const household = await HouseholdService.getHouseholdAsync(householdId);
     if (!household) {
       return Response.json(
         createErrorResponse("NOT_FOUND", `Household ${householdId} not found`),
@@ -19,7 +19,7 @@ export async function GET(request: Request) {
   }
 
   if (userId) {
-    const household = HouseholdService.getHouseholdForUser(userId);
+    const household = await HouseholdService.getHouseholdForUserAsync(userId);
     if (!household) {
       return Response.json(
         createErrorResponse("NOT_FOUND", `No household found for user ${userId}`),

@@ -6,6 +6,12 @@ import {
   HouseholdExpenseSchema,
 } from "./expense-schema";
 import { Paise } from "../../shared/types/money";
+import { db, isTestEnv } from "../../shared/db";
+import {
+  householdExpenses as householdExpensesTable,
+  householdExpenseParticipants as householdExpenseParticipantsTable,
+} from "../../shared/db/schema";
+import { eq, and } from "drizzle-orm";
 
 const expensesStore = new Map<string, HouseholdExpense>();
 
@@ -117,6 +123,39 @@ export class ExpenseSplitter {
     });
 
     expensesStore.set(expenseId, expense);
+
+    if (!isTestEnv) {
+      db.insert(householdExpensesTable)
+        .values({
+          id: expenseId,
+          householdId: input.householdId,
+          invoiceId: input.invoiceId,
+          description: input.description,
+          totalAmountPaise: totalPaise,
+          paidByUserId: input.paidByUserId,
+          paidByName: input.paidByName,
+          paidByUpi: input.paidByUpi,
+          strategy: input.strategy,
+          isFullySettled: allSettled,
+        })
+        .catch(() => {});
+
+      for (const p of computedParticipants) {
+        db.insert(householdExpenseParticipantsTable)
+          .values({
+            id: `part_${expenseId}_${p.userId}`,
+            expenseId,
+            userId: p.userId,
+            name: p.name,
+            phone: p.phone,
+            sharePaise: p.sharePaise,
+            isSettled: p.isSettled,
+            upiId: p.upiId,
+          })
+          .catch(() => {});
+      }
+    }
+
     return expense;
   }
 
@@ -160,6 +199,29 @@ export class ExpenseSplitter {
     expense.updatedAt = new Date().toISOString();
     expensesStore.set(expense.id, expense);
 
+    if (!isTestEnv) {
+      db.update(householdExpenseParticipantsTable)
+        .set({
+          isSettled: true,
+          settledAt: new Date(),
+        })
+        .where(
+          and(
+            eq(householdExpenseParticipantsTable.expenseId, expenseId),
+            eq(householdExpenseParticipantsTable.userId, participantUserId)
+          )
+        )
+        .catch(() => {});
+
+      db.update(householdExpensesTable)
+        .set({
+          isFullySettled: expense.isFullySettled,
+          updatedAt: new Date(),
+        })
+        .where(eq(householdExpensesTable.id, expenseId))
+        .catch(() => {});
+    }
+
     return expense;
   }
 
@@ -168,6 +230,58 @@ export class ExpenseSplitter {
    */
   static listByHousehold(householdId: string): HouseholdExpense[] {
     return Array.from(expensesStore.values()).filter((e) => e.householdId === householdId);
+  }
+
+  /**
+   * Lists all expenses for a household from Neon DB
+   */
+  static async listByHouseholdAsync(householdId: string): Promise<HouseholdExpense[]> {
+    if (!isTestEnv) {
+      try {
+        const expRows = await db
+          .select()
+          .from(householdExpensesTable)
+          .where(eq(householdExpensesTable.householdId, householdId));
+
+        if (expRows && expRows.length > 0) {
+          const result: HouseholdExpense[] = [];
+          for (const exp of expRows) {
+            const partRows = await db
+              .select()
+              .from(householdExpenseParticipantsTable)
+              .where(eq(householdExpenseParticipantsTable.expenseId, exp.id));
+
+            result.push({
+              id: exp.id,
+              householdId: exp.householdId,
+              invoiceId: exp.invoiceId ?? undefined,
+              description: exp.description,
+              totalAmountPaise: exp.totalAmountPaise,
+              paidByUserId: exp.paidByUserId,
+              paidByName: exp.paidByName,
+              paidByUpi: exp.paidByUpi,
+              strategy: exp.strategy as any,
+              participants: partRows.map((p) => ({
+                userId: p.userId,
+                name: p.name,
+                phone: p.phone,
+                sharePaise: p.sharePaise,
+                isSettled: p.isSettled,
+                settledAt: p.settledAt ? p.settledAt.toISOString() : undefined,
+                upiId: p.upiId ?? undefined,
+              })),
+              isFullySettled: exp.isFullySettled,
+              createdAt: exp.createdAt.toISOString(),
+              updatedAt: exp.updatedAt.toISOString(),
+            });
+          }
+          return result;
+        }
+      } catch {
+        // Fallback
+      }
+    }
+    return this.listByHousehold(householdId);
   }
 
   /**

@@ -6,6 +6,9 @@ import {
 } from "./delivery-schema";
 import { FulfillmentStateMachine } from "../fulfillment/fulfillment-fsm";
 import { AssetLedgerService } from "../assets/asset-ledger";
+import { db, isTestEnv } from "../../shared/db";
+import { deliveryRuns as deliveryRunsTable, deliveryStops as deliveryStopsTable } from "../../shared/db/schema";
+import { eq } from "drizzle-orm";
 
 const runsStore = new Map<string, DeliveryRun>();
 
@@ -107,6 +110,67 @@ export class DeliveryEngine {
   }
 
   /**
+   * Retrieves a run sheet by ID from Neon DB
+   */
+  static async getRunSheetAsync(runId: string): Promise<DeliveryRun | null> {
+    if (!isTestEnv) {
+      try {
+        const [runRow] = await db
+          .select()
+          .from(deliveryRunsTable)
+          .where(eq(deliveryRunsTable.id, runId));
+
+        if (runRow) {
+          const stopRows = await db
+            .select()
+            .from(deliveryStopsTable)
+            .where(eq(deliveryStopsTable.runId, runId));
+
+          return {
+            id: runRow.id,
+            tenantId: runRow.tenantId,
+            driverId: runRow.driverId,
+            driverName: runRow.driverName,
+            date: runRow.date,
+            shift: runRow.shift as any,
+            totalStops: runRow.totalStops,
+            completedStops: runRow.completedStops,
+            skippedStops: runRow.skippedStops,
+            failedStops: runRow.failedStops,
+            status: runRow.status as any,
+            createdAt: runRow.createdAt.toISOString(),
+            updatedAt: runRow.updatedAt.toISOString(),
+            stops: stopRows.map((s) => ({
+              id: s.id,
+              fulfillmentId: s.fulfillmentId || `ful_${s.id}`,
+              tenantId: runRow.tenantId,
+              customerId: s.customerId,
+              customerName: s.customerName,
+              customerPhone: s.customerPhone,
+              society: s.society,
+              tower: s.tower,
+              floor: s.floor,
+              flat: s.flat,
+              serviceName: s.serviceName,
+              quantity: s.quantity,
+              status: s.status as any,
+              dropPreference: s.dropPreference as any,
+              assetCollected: s.assetCollected ?? 0,
+              assetDelivered: s.assetDelivered ?? 0,
+              deliveredAt: s.deliveredAt ?? undefined,
+              failureReason: s.failureReason ?? undefined,
+              notes: s.notes ?? undefined,
+            })),
+          };
+        }
+      } catch {
+        // Fallback
+      }
+    }
+    return this.getRunSheet(runId);
+  }
+
+  /**
    * Completes a delivery stop (Driver tapped Delivered)
    */
   static async completeStop(params: {
@@ -186,6 +250,28 @@ export class DeliveryEngine {
     run.updatedAt = new Date().toISOString();
     runsStore.set(run.id, run);
 
+    if (!isTestEnv) {
+      db.update(deliveryStopsTable)
+        .set({
+          status: "DELIVERED",
+          deliveredAt: stop.deliveredAt,
+          assetCollected: params.assetCollected || 0,
+          assetDelivered: params.assetDelivered || 0,
+          notes: params.notes,
+        })
+        .where(eq(deliveryStopsTable.id, params.stopId))
+        .catch(() => {});
+
+      db.update(deliveryRunsTable)
+        .set({
+          completedStops: run.completedStops,
+          status: run.status,
+          updatedAt: new Date(),
+        })
+        .where(eq(deliveryRunsTable.id, params.runId))
+        .catch(() => {});
+    }
+
     return { run, stop };
   }
 
@@ -246,6 +332,25 @@ export class DeliveryEngine {
 
     run.updatedAt = new Date().toISOString();
     runsStore.set(run.id, run);
+
+    if (!isTestEnv) {
+      db.update(deliveryStopsTable)
+        .set({
+          status: "FAILED",
+          failureReason: params.failureReason,
+        })
+        .where(eq(deliveryStopsTable.id, params.stopId))
+        .catch(() => {});
+
+      db.update(deliveryRunsTable)
+        .set({
+          failedStops: run.failedStops,
+          status: run.status,
+          updatedAt: new Date(),
+        })
+        .where(eq(deliveryRunsTable.id, params.runId))
+        .catch(() => {});
+    }
 
     return { run, stop };
   }

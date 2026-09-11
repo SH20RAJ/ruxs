@@ -13,7 +13,7 @@ export async function GET(request: Request) {
     );
   }
 
-  const list = ExpenseSplitter.listByHousehold(householdId);
+  const list = await ExpenseSplitter.listByHouseholdAsync(householdId);
   return Response.json(createSuccessResponse(list));
 }
 

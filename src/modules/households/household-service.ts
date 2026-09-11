@@ -6,6 +6,13 @@ import {
   InviteMemberInput,
   InviteMemberSchema,
 } from "./household-schema";
+import { db, isTestEnv } from "../../shared/db";
+import {
+  households as householdsTable,
+  householdMembers as householdMembersTable,
+  users as usersTable,
+} from "../../shared/db/schema";
+import { eq } from "drizzle-orm";
 
 const householdStore = new Map<string, Household>();
 const userHouseholdIndex = new Map<string, string>(); // userId -> householdId
@@ -46,6 +53,30 @@ export class HouseholdService {
 
     householdStore.set(householdId, household);
     userHouseholdIndex.set(input.primaryOwnerId, householdId);
+
+    if (!isTestEnv) {
+      db.insert(householdsTable)
+        .values({
+          id: householdId,
+          name: input.name,
+          primaryOwnerId: input.primaryOwnerId,
+          societyName: input.societyName,
+          towerWing: input.towerWing,
+          floor: String(input.floor),
+          flatNumber: input.flatNumber,
+          city: input.city,
+        })
+        .catch(() => {});
+
+      db.insert(householdMembersTable)
+        .values({
+          id: ownerMember.id,
+          householdId,
+          userId: input.primaryOwnerId,
+          role: "PRIMARY_OWNER",
+        })
+        .catch(() => {});
+    }
 
     return household;
   }
@@ -91,6 +122,17 @@ export class HouseholdService {
     householdStore.set(household.id, household);
     userHouseholdIndex.set(memberUserId, household.id);
 
+    if (!isTestEnv) {
+      db.insert(householdMembersTable)
+        .values({
+          id: newMember.id,
+          householdId: input.householdId,
+          userId: memberUserId,
+          role: input.role,
+        })
+        .catch(() => {});
+    }
+
     return { household, member: newMember };
   }
 
@@ -102,12 +144,85 @@ export class HouseholdService {
   }
 
   /**
+   * Retrieves a household by ID from Neon DB
+   */
+  static async getHouseholdAsync(id: string): Promise<Household | null> {
+    if (!isTestEnv) {
+      try {
+        const [hRow] = await db
+          .select()
+          .from(householdsTable)
+          .where(eq(householdsTable.id, id));
+
+        if (hRow) {
+          const mRows = await db
+            .select({
+              member: householdMembersTable,
+              user: usersTable,
+            })
+            .from(householdMembersTable)
+            .leftJoin(usersTable, eq(householdMembersTable.userId, usersTable.id))
+            .where(eq(householdMembersTable.householdId, id));
+
+          return {
+            id: hRow.id,
+            name: hRow.name,
+            primaryOwnerId: hRow.primaryOwnerId,
+            societyName: hRow.societyName,
+            towerWing: hRow.towerWing,
+            floor: String(hRow.floor),
+            flatNumber: hRow.flatNumber,
+            city: hRow.city,
+            createdAt: hRow.createdAt.toISOString(),
+            updatedAt: hRow.createdAt.toISOString(),
+            members: mRows.map(({ member: m, user: u }) => ({
+              id: m.id,
+              householdId: m.householdId,
+              userId: m.userId,
+              name: u?.fullName || "Member",
+              phone: u?.phone || "+91 98765 43210",
+              role: m.role as any,
+              canManageSubscriptions: m.role === "PRIMARY_OWNER" || m.role === "ADMIN",
+              canSkipDeliveries: true,
+              joinedAt: m.createdAt.toISOString(),
+            })),
+          };
+        }
+      } catch {
+        // Fallback
+      }
+    }
+    return this.getHousehold(id);
+  }
+
+  /**
    * Retrieves household for a specific user
    */
   static getHouseholdForUser(userId: string): Household | null {
     const householdId = userHouseholdIndex.get(userId);
     if (!householdId) return null;
     return householdStore.get(householdId) || null;
+  }
+
+  /**
+   * Retrieves household for a specific user from Neon DB
+   */
+  static async getHouseholdForUserAsync(userId: string): Promise<Household | null> {
+    if (!isTestEnv) {
+      try {
+        const [mRow] = await db
+          .select()
+          .from(householdMembersTable)
+          .where(eq(householdMembersTable.userId, userId));
+
+        if (mRow) {
+          return this.getHouseholdAsync(mRow.householdId);
+        }
+      } catch {
+        // Fallback
+      }
+    }
+    return this.getHouseholdForUser(userId);
   }
 
   /**
