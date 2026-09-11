@@ -4,31 +4,32 @@
 Implement the 11-state daily fulfillment engine that converts subscriptions into actionable daily operations.
 
 ## Requirements
-- [ ] Midnight generator function producing SCHEDULED fulfillments
-- [ ] Full 11-state finite state machine with strict transition guards
-- [ ] Atomic status transition API (Confirm, Skip, Out for Delivery, Delivered)
-- [ ] Price snapshot preservation on fulfillment items
+- [x] Midnight generator function producing SCHEDULED fulfillments
+- [x] Full 11-state finite state machine with strict transition guards
+- [x] Atomic status transition API (Confirm, Skip, Out for Delivery, Delivered)
+- [x] Price snapshot preservation on fulfillment items
 
 ## Implementation
-- [ ] Database/model
-- [ ] Server-side logic
-- [ ] UI
-- [ ] Validation
-- [ ] Error handling
-- [ ] Tests
-- [ ] Documentation
+- [x] Database/model
+- [x] Server-side logic
+- [x] UI
+- [x] Validation
+- [x] Error handling
+- [x] Tests
+- [x] Documentation
 
 ## Acceptance Criteria
-- [ ] All 11 states modeled with invalid transitions rejected
-- [ ] Delivered transition triggers Khata and Asset updates atomically
+- [x] All 11 states modeled with invalid transitions rejected
+- [x] Delivered transition triggers Khata and Asset updates atomically
 
 ## Verification
-- [ ] Local test passed
-- [ ] Build passed
-- [ ] Relevant tests passed
-- [ ] Manual verification passed
+- [x] Local test passed
+- [x] Build passed
+- [x] Relevant tests passed
+- [x] Manual verification passed
 
 ## Git
-- Commit:
-- Push:
-- Branch:
+- Commit: feat: implement 11-state daily fulfillment engine, overnight generator and cutoff guards
+- Push: origin main
+- Branch: main
+
