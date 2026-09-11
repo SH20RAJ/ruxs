@@ -4,33 +4,34 @@
 Build frictionless phone OTP authentication, session creation, and edge role resolution.
 
 ## Requirements
-- [ ] Create phone number normalization utility (+91 E.164)
-- [ ] Implement OTP generation and verification mock/provider service
-- [ ] Issue edge-verifiable session tokens (JWT/cookies)
-- [ ] Enforce role assignment (Customer, Vendor, Driver, Admin)
-- [ ] Handle magic deep-link session generation
+- [x] Create phone number normalization utility (+91 E.164)
+- [x] Implement OTP generation and verification mock/provider service
+- [x] Issue edge-verifiable session tokens (JWT/cookies)
+- [x] Enforce role assignment (Customer, Vendor, Driver, Admin)
+- [x] Handle magic deep-link session generation
 
 ## Implementation
-- [ ] Database/model
-- [ ] Server-side logic
-- [ ] UI
-- [ ] Validation
-- [ ] Error handling
-- [ ] Tests
-- [ ] Documentation
+- [x] Database/model
+- [x] Server-side logic
+- [x] UI
+- [x] Validation
+- [x] Error handling
+- [x] Tests
+- [x] Documentation
 
 ## Acceptance Criteria
-- [ ] User can enter phone number and receive/verify 6-digit OTP
-- [ ] Session cookies are HttpOnly and secure
-- [ ] Role middleware guards protected routes
+- [x] User can enter phone number and receive/verify 6-digit OTP
+- [x] Session cookies are HttpOnly and secure
+- [x] Role middleware guards protected routes
 
 ## Verification
-- [ ] Local test passed
-- [ ] Build passed
-- [ ] Relevant tests passed
-- [ ] Manual verification passed
+- [x] Local test passed
+- [x] Build passed
+- [x] Relevant tests passed
+- [x] Manual verification passed
 
 ## Git
-- Commit:
-- Push:
-- Branch:
+- Commit: feat: add passwordless phone otp authentication and user roles
+- Push: origin main
+- Branch: main
+

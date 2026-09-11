@@ -13,7 +13,7 @@ This master checklist represents the complete execution roadmap for RUXS. Checkb
 - [x] [01-brand-and-shell](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/01-brand-and-shell.md) — RUXS branding, modern responsive app shell, mobile-first navigation & PWA metadata
 
 ## Identity & Access
-- [ ] [02-authentication](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/02-authentication.md) — Passwordless Phone OTP authentication & edge session management
+- [x] [02-authentication](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/02-authentication.md) — Passwordless Phone OTP authentication & edge session management
 
 ## Core Domain & Operations
 - [ ] [03-database](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/03-database.md) — PostgreSQL schema, Drizzle ORM migrations, indexes & tenant RLS
