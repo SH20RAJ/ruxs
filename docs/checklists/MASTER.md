@@ -25,7 +25,7 @@ This master checklist represents the complete execution roadmap for RUXS. Checkb
 - [x] [09-cutoff-engine](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/09-cutoff-engine.md) — Automated cutoff locking, batch counter & late skip policies
 - [x] [10-khata](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/10-khata.md) — Append-only double-entry transactional financial ledger in integer Paise
 - [x] [11-billing](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/11-billing.md) — Monthly statement derivation, itemization & automated invoice generation
-- [ ] [12-payments](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/12-payments.md) — UPI-first payment provider abstraction & idempotent webhook reconciliation
+- [x] [12-payments](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/12-payments.md) — UPI-first payment provider abstraction & idempotent webhook reconciliation
 
 ## Communication & Interface
 - [ ] [13-whatsapp](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/13-whatsapp.md) — Meta Cloud API interactive buttons, webhooks & session management

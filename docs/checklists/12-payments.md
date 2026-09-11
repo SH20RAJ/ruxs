@@ -4,31 +4,32 @@
 Implement UPI-first payment gateway abstraction with idempotent webhook reconciliation.
 
 ## Requirements
-- [ ] PaymentGatewayAdapter interface supporting UPI Intent and QR generation
-- [ ] Payment state machine: CREATED -> INITIATED -> PENDING -> SUCCESS -> FAILED
-- [ ] Cryptographic webhook signature verification (HMAC SHA-256)
-- [ ] Idempotent payment success handler appending PAYMENT_CREDIT to Khata
+- [x] PaymentGatewayAdapter interface supporting UPI Intent and QR generation
+- [x] Payment state machine: CREATED -> INITIATED -> PENDING -> SUCCESS -> FAILED
+- [x] Cryptographic webhook signature verification (HMAC SHA-256)
+- [x] Idempotent payment success handler appending PAYMENT_CREDIT to Khata
 
 ## Implementation
-- [ ] Database/model
-- [ ] Server-side logic
-- [ ] UI
-- [ ] Validation
-- [ ] Error handling
-- [ ] Tests
-- [ ] Documentation
+- [x] Database/model
+- [x] Server-side logic
+- [x] UI
+- [x] Validation
+- [x] Error handling
+- [x] Tests
+- [x] Documentation
 
 ## Acceptance Criteria
-- [ ] Duplicate payment webhooks cause zero double-crediting
-- [ ] Client cannot mark payment successful without verified server webhook
+- [x] Duplicate payment webhooks cause zero double-crediting
+- [x] Client cannot mark payment successful without verified server webhook
 
 ## Verification
-- [ ] Local test passed
-- [ ] Build passed
-- [ ] Relevant tests passed
-- [ ] Manual verification passed
+- [x] Local test passed
+- [x] Build passed
+- [x] Relevant tests passed
+- [x] Manual verification passed
 
 ## Git
-- Commit:
-- Push:
-- Branch:
+- Commit: feat: implement upi payment gateway abstraction with hmac signature verification and idempotent khata reconciliation
+- Push: origin main
+- Branch: main
+
