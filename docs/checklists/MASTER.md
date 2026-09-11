@@ -37,7 +37,7 @@ This master checklist represents the complete execution roadmap for RUXS. Checkb
 ## Logistics & Physical Assets
 - [x] [16-assets](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/16-assets.md) — Returnable physical container accounting (20L jars, tiffins, deposits)
 - [ ] [17-delivery](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/17-delivery.md) — Driver run sheets, society/tower sequencing & delivery verification
-- [ ] [18-vacation-mode](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/18-vacation-mode.md) — Multi-service bulk pause windows & automated billing freeze
+- [x] [18-vacation-mode](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/18-vacation-mode.md) — Multi-service bulk pause windows & automated billing freeze
 
 ## Household & Social
 - [ ] [19-households](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/19-households.md) — Shared household accounts, roommate permissions & service visibility

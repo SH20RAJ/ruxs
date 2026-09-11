@@ -2,6 +2,7 @@ import { Subscription } from "../subscriptions/subscription-schema";
 import { SubscriptionEngine } from "../subscriptions/subscription-engine";
 import { DailyFulfillment, FulfillmentItemSnapshot } from "./fulfillment-schema";
 import { FulfillmentStateMachine } from "./fulfillment-fsm";
+import { VacationService } from "../vacation/vacation-service";
 import { Paise } from "../../shared/types/money";
 
 export interface GenerateFulfillmentsOptions {
@@ -25,8 +26,13 @@ export class FulfillmentGenerator {
     const createdList: DailyFulfillment[] = [];
 
     for (const sub of subscriptions) {
-      // Check if subscription is scheduled for this calendar date
+      // 1. Check if subscription is scheduled for this calendar date
       if (!SubscriptionEngine.isScheduledOnDate(sub, serviceDate)) {
+        continue;
+      }
+
+      // 2. Vacation Mode Guard: Check if subscription is paused under an active vacation window
+      if (VacationService.isSubscriptionPausedOnDate(sub.customerId, sub.id, serviceDate)) {
         continue;
       }
 
