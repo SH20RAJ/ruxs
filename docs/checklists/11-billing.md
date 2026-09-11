@@ -4,31 +4,32 @@
 Derive monthly itemized invoices from unbilled Khata entries with automated statement generation.
 
 ## Requirements
-- [ ] Monthly billing aggregator worker running on the 1st of each month
-- [ ] Invoice entity creation with itemized line items and discounts
-- [ ] Previous unpaid balance carry-forward logic
-- [ ] Unique invoice reference number generation (INV-YYYY-MM-XXXX)
+- [x] Monthly billing aggregator worker running on the 1st of each month
+- [x] Invoice entity creation with itemized line items and discounts
+- [x] Previous unpaid balance carry-forward logic
+- [x] Unique invoice reference number generation (INV-YYYY-MM-XXXX)
 
 ## Implementation
-- [ ] Database/model
-- [ ] Server-side logic
-- [ ] UI
-- [ ] Validation
-- [ ] Error handling
-- [ ] Tests
-- [ ] Documentation
+- [x] Database/model
+- [x] Server-side logic
+- [x] UI
+- [x] Validation
+- [x] Error handling
+- [x] Tests
+- [x] Documentation
 
 ## Acceptance Criteria
-- [ ] Invoice total equals exact sum of unbilled ledger debits minus credits
-- [ ] Partial payments update invoice state without modifying ledger history
+- [x] Invoice total equals exact sum of unbilled ledger debits minus credits
+- [x] Partial payments update invoice state without modifying ledger history
 
 ## Verification
-- [ ] Local test passed
-- [ ] Build passed
-- [ ] Relevant tests passed
-- [ ] Manual verification passed
+- [x] Local test passed
+- [x] Build passed
+- [x] Relevant tests passed
+- [x] Manual verification passed
 
 ## Git
-- Commit:
-- Push:
-- Branch:
+- Commit: feat: implement monthly consolidated billing engine with itemized line items and invoice generation
+- Push: origin main
+- Branch: main
+

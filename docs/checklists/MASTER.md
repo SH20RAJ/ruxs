@@ -24,7 +24,7 @@ This master checklist represents the complete execution roadmap for RUXS. Checkb
 - [x] [08-daily-fulfillment](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/08-daily-fulfillment.md) — 11-State fulfillment FSM & daily midnight generator
 - [x] [09-cutoff-engine](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/09-cutoff-engine.md) — Automated cutoff locking, batch counter & late skip policies
 - [x] [10-khata](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/10-khata.md) — Append-only double-entry transactional financial ledger in integer Paise
-- [ ] [11-billing](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/11-billing.md) — Monthly statement derivation, itemization & automated invoice generation
+- [x] [11-billing](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/11-billing.md) — Monthly statement derivation, itemization & automated invoice generation
 - [ ] [12-payments](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/12-payments.md) — UPI-first payment provider abstraction & idempotent webhook reconciliation
 
 ## Communication & Interface
