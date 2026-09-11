@@ -19,7 +19,7 @@ This master checklist represents the complete execution roadmap for RUXS. Checkb
 - [x] [03-database](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/03-database.md) — PostgreSQL schema, Drizzle ORM migrations, indexes & tenant RLS
 - [x] [04-vendor-onboarding](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/04-vendor-onboarding.md) — Vendor profile setup, UPI ID, service zones & operating hours
 - [x] [05-customer-onboarding](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/05-customer-onboarding.md) — Customer address capture, society/tower selection & phone link
-- [ ] [06-services](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/06-services.md) — Service catalog (Tiffin, Water, Milk), units, pricing & configurable cutoffs
+- [x] [06-services](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/06-services.md) — Service catalog (Tiffin, Water, Milk), units, pricing & configurable cutoffs
 - [ ] [07-subscriptions](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/07-subscriptions.md) — Recurring schedule engine (Daily, Weekdays, Alternate Days)
 - [ ] [08-daily-fulfillment](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/08-daily-fulfillment.md) — 11-State fulfillment FSM & daily midnight generator
 - [ ] [09-cutoff-engine](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/09-cutoff-engine.md) — Automated cutoff locking, batch counter & late skip policies
