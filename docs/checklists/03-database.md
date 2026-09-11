@@ -4,32 +4,33 @@
 Set up edge-compatible Drizzle ORM schema, relational tables, migrations, and PostgreSQL Row-Level Security.
 
 ## Requirements
-- [ ] Define core schema tables: tenants, users, services, products, subscriptions, fulfillments, khata_entries
-- [ ] Enforce foreign keys, unique constraints, and composite indexes
-- [ ] Implement tenant isolation queries and context injection
-- [ ] Configure migrations and database client for edge runtime
+- [x] Define core schema tables: tenants, users, services, products, subscriptions, fulfillments, khata_entries
+- [x] Enforce foreign keys, unique constraints, and composite indexes
+- [x] Implement tenant isolation queries and context injection
+- [x] Configure migrations and database client for edge runtime
 
 ## Implementation
-- [ ] Database/model
-- [ ] Server-side logic
-- [ ] UI
-- [ ] Validation
-- [ ] Error handling
-- [ ] Tests
-- [ ] Documentation
+- [x] Database/model
+- [x] Server-side logic
+- [x] UI
+- [x] Validation
+- [x] Error handling
+- [x] Tests
+- [x] Documentation
 
 ## Acceptance Criteria
-- [ ] Schema matches data-model.md specifications
-- [ ] Integer Paise used for all financial amounts
-- [ ] Migrations run cleanly
+- [x] Schema matches data-model.md specifications
+- [x] Integer Paise used for all financial amounts
+- [x] Migrations run cleanly
 
 ## Verification
-- [ ] Local test passed
-- [ ] Build passed
-- [ ] Relevant tests passed
-- [ ] Manual verification passed
+- [x] Local test passed
+- [x] Build passed
+- [x] Relevant tests passed
+- [x] Manual verification passed
 
 ## Git
-- Commit:
-- Push:
-- Branch:
+- Commit: feat: setup edge drizzle orm schema, integer paise tables and tenant isolation
+- Push: origin main
+- Branch: main
+

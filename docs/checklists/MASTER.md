@@ -16,7 +16,7 @@ This master checklist represents the complete execution roadmap for RUXS. Checkb
 - [x] [02-authentication](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/02-authentication.md) — Passwordless Phone OTP authentication & edge session management
 
 ## Core Domain & Operations
-- [ ] [03-database](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/03-database.md) — PostgreSQL schema, Drizzle ORM migrations, indexes & tenant RLS
+- [x] [03-database](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/03-database.md) — PostgreSQL schema, Drizzle ORM migrations, indexes & tenant RLS
 - [ ] [04-vendor-onboarding](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/04-vendor-onboarding.md) — Vendor profile setup, UPI ID, service zones & operating hours
 - [ ] [05-customer-onboarding](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/05-customer-onboarding.md) — Customer address capture, society/tower selection & phone link
 - [ ] [06-services](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/06-services.md) — Service catalog (Tiffin, Water, Milk), units, pricing & configurable cutoffs
