@@ -1,0 +1,35 @@
+{
+	"name": "ruxx",
+	"version": "0.1.0",
+	"private": true,
+	"packageManager": "bun@1.3.11",
+	"dependencies": {
+		"react": "latest",
+		"react-dom": "latest",
+		"vinext": "latest",
+		"react-server-dom-webpack": "latest",
+		"@vinext/cloudflare": "latest"
+	},
+	"devDependencies": {
+		"@cloudflare/vite-plugin": "latest",
+		"@tailwindcss/postcss": "latest",
+		"@types/node": "^22.20.2",
+		"@types/react": "latest",
+		"@types/react-dom": "latest",
+		"@vitejs/plugin-react": "latest",
+		"@vitejs/plugin-rsc": "latest",
+		"tailwindcss": "latest",
+		"typescript": "latest",
+		"vite": "latest",
+		"wrangler": "^4.131.0"
+	},
+	"type": "module",
+	"scripts": {
+		"dev": "vinext dev",
+		"build": "vinext build",
+		"start": "wrangler dev --config dist/server/wrangler.json",
+		"deploy": "vinext-cloudflare deploy --config dist/server/wrangler.json",
+		"preview": "bun run build && bun run start",
+		"cf-typegen": "wrangler types --env-interface CloudflareEnv ./worker-configuration.d.ts"
+	}
+}
