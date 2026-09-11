@@ -32,7 +32,7 @@ This master checklist represents the complete execution roadmap for RUXS. Checkb
 
 ## Communication & Interface
 - [ ] [13-whatsapp](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/13-whatsapp.md) — Meta Cloud API interactive buttons, webhooks & session management
-- [ ] [14-notifications](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/14-notifications.md) — Multi-channel event-driven notifications (In-app, Push, SMS fallback)
+- [x] [14-notifications](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/14-notifications.md) — Multi-channel event-driven notifications (In-app, Push, SMS fallback)
 
 ## Logistics & Physical Assets
 - [ ] [16-assets](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/16-assets.md) — Returnable physical container accounting (20L jars, tiffins, deposits)

@@ -4,31 +4,32 @@
 Build event-driven notification dispatch across WhatsApp, Web Push, and DLT SMS fallback.
 
 ## Requirements
-- [ ] Event subscriber listening to domain fulfillment and billing events
-- [ ] Channel priority router (WhatsApp -> Web Push -> SMS fallback)
-- [ ] Template compilation with dynamic parameters
-- [ ] Notification dispatch audit logging
+- [x] Event subscriber listening to domain fulfillment and billing events
+- [x] Channel priority router (WhatsApp -> Web Push -> SMS fallback)
+- [x] Template compilation with dynamic parameters
+- [x] Notification dispatch audit logging
 
 ## Implementation
-- [ ] Database/model
-- [ ] Server-side logic
-- [ ] UI
-- [ ] Validation
-- [ ] Error handling
-- [ ] Tests
-- [ ] Documentation
+- [x] Database/model
+- [x] Server-side logic
+- [x] UI
+- [x] Validation
+- [x] Error handling
+- [x] Tests
+- [x] Documentation
 
 ## Acceptance Criteria
-- [ ] Failed WhatsApp delivery automatically queues SMS fallback
-- [ ] Quiet hours enforced for non-urgent notifications
+- [x] Failed WhatsApp delivery automatically queues SMS fallback
+- [x] Quiet hours enforced for non-urgent notifications
 
 ## Verification
-- [ ] Local test passed
-- [ ] Build passed
-- [ ] Relevant tests passed
-- [ ] Manual verification passed
+- [x] Local test passed
+- [x] Build passed
+- [x] Relevant tests passed
+- [x] Manual verification passed
 
 ## Git
-- Commit:
-- Push:
-- Branch:
+- Commit: feat: implement multi-channel notification engine with channel priority router and quiet hours guard
+- Push: origin main
+- Branch: main
+
