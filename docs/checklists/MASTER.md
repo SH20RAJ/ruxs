@@ -44,7 +44,7 @@ This master checklist represents the complete execution roadmap for RUXS. Checkb
 - [x] [20-expense-splitting](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/20-expense-splitting.md) — Splitwise-style roommate billing & P2P UPI settlements
 
 ## Reliability & Governance
-- [ ] [21-disputes](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/21-disputes.md) — Ledger dispute management, evidence timeline & compensating entries
+- [x] [21-disputes](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/21-disputes.md) — Ledger dispute management, evidence timeline & compensating entries
 - [ ] [26-security](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/26-security.md) — Security hardening, rate limiting, HMAC signatures & DPDP compliance
 - [ ] [27-testing](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/27-testing.md) — Unit & integration test suites for ledgers and state machines
 - [ ] [28-performance](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/28-performance.md) — Edge latency optimization, bundle audits & database query indexing
