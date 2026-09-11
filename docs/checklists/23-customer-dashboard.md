@@ -4,31 +4,31 @@
 Create the responsive web portal for customers to inspect daily deliveries, Khata ledger, and invoices.
 
 ## Requirements
-- [ ] Today fulfillment card with 1-tap skip/deliver toggle
-- [ ] Chronological Khata ledger view with running balance
-- [ ] Active subscriptions list with pause/resume controls
-- [ ] Invoice history with 1-click UPI pay button
+- [x] Today fulfillment card with 1-tap skip/deliver toggle
+- [x] Chronological Khata ledger view with running balance
+- [x] Active subscriptions list with pause/resume controls
+- [x] Invoice history with 1-click UPI pay button
 
 ## Implementation
-- [ ] Database/model
-- [ ] Server-side logic
-- [ ] UI
-- [ ] Validation
-- [ ] Error handling
-- [ ] Tests
-- [ ] Documentation
+- [x] Database/model
+- [x] Server-side logic
+- [x] UI
+- [x] Validation
+- [x] Error handling
+- [x] Tests
+- [x] Documentation
 
 ## Acceptance Criteria
-- [ ] Zero-jank mobile responsiveness
-- [ ] Clear financial transparency on every past delivery
+- [x] Zero-jank mobile responsiveness
+- [x] Clear financial transparency on every past delivery
 
 ## Verification
-- [ ] Local test passed
-- [ ] Build passed
-- [ ] Relevant tests passed
-- [ ] Manual verification passed
+- [x] Local test passed
+- [x] Build passed
+- [x] Relevant tests passed
+- [x] Manual verification passed
 
 ## Git
-- Commit:
-- Push:
-- Branch:
+- Commit: feat: implement customer domestic command center with 1-tap daily actions and khata upi settlements
+- Push: SUCCESS
+- Branch: main
