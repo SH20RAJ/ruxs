@@ -10,7 +10,7 @@ This master checklist represents the complete execution roadmap for RUXS. Checkb
 
 ## Foundation
 - [x] [00-foundation](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/00-foundation.md) — Repository audit, documentation, checklists & engineering standards
-- [ ] [01-brand-and-shell](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/01-brand-and-shell.md) — RUXS branding, modern responsive app shell, mobile-first navigation & PWA metadata
+- [x] [01-brand-and-shell](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/01-brand-and-shell.md) — RUXS branding, modern responsive app shell, mobile-first navigation & PWA metadata
 
 ## Identity & Access
 - [ ] [02-authentication](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/02-authentication.md) — Passwordless Phone OTP authentication & edge session management

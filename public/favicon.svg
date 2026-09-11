@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <rect width="64" height="64" rx="16" fill="#090d16"/>
+  <path d="M18 16H34C41.732 16 48 21.3726 48 28C48 34.6274 41.732 40 34 40H26V48H18V16Z" fill="url(#ruxs-gradient)"/>
+  <circle cx="34" cy="28" r="5" fill="#090d16"/>
+  <path d="M32 38L46 50H36L26 40H32Z" fill="#10B981"/>
+  <defs>
+    <linearGradient id="ruxs-gradient" x1="18" y1="16" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#10B981"/>
+      <stop offset="0.5" stop-color="#3B82F6"/>
+      <stop offset="1" stop-color="#8B5CF6"/>
+    </linearGradient>
+  </defs>
+</svg>
