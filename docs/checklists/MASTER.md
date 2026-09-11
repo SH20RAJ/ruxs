@@ -41,7 +41,7 @@ This master checklist represents the complete execution roadmap for RUXS. Checkb
 
 ## Household & Social
 - [x] [19-households](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/19-households.md) — Shared household accounts, roommate permissions & service visibility
-- [ ] [20-expense-splitting](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/20-expense-splitting.md) — Splitwise-style roommate billing & P2P UPI settlements
+- [x] [20-expense-splitting](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/20-expense-splitting.md) — Splitwise-style roommate billing & P2P UPI settlements
 
 ## Reliability & Governance
 - [ ] [21-disputes](file:///Users/shaswatraj/Desktop/ruxx/docs/checklists/21-disputes.md) — Ledger dispute management, evidence timeline & compensating entries
