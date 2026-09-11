@@ -1,0 +1,33 @@
+name: RUXS CI Quality Gates
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    name: Typecheck, Test & Edge Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: TypeScript Strict Typecheck
+        run: bun run typecheck
+
+      - name: Run Automated Test Suites
+        run: bun run test
+
+      - name: Compile Edge Production Build
+        run: bun run build

@@ -4,15 +4,17 @@
 	"private": true,
 	"packageManager": "bun@1.3.11",
 	"dependencies": {
+		"@vinext/cloudflare": "latest",
 		"react": "latest",
 		"react-dom": "latest",
-		"vinext": "latest",
 		"react-server-dom-webpack": "latest",
-		"@vinext/cloudflare": "latest"
+		"vinext": "latest",
+		"zod": "^4.6.2"
 	},
 	"devDependencies": {
 		"@cloudflare/vite-plugin": "latest",
 		"@tailwindcss/postcss": "latest",
+		"@types/bun": "^1.4.2",
 		"@types/node": "^22.20.2",
 		"@types/react": "latest",
 		"@types/react-dom": "latest",
@@ -30,6 +32,8 @@
 		"start": "wrangler dev --config dist/server/wrangler.json",
 		"deploy": "vinext-cloudflare deploy --config dist/server/wrangler.json",
 		"preview": "bun run build && bun run start",
+		"test": "bun test",
+		"typecheck": "tsc --noEmit",
 		"cf-typegen": "wrangler types --env-interface CloudflareEnv ./worker-configuration.d.ts"
 	}
 }
